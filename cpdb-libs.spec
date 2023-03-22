@@ -83,6 +83,7 @@ Statyczne biblioteki CPDB.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{%{_libdir}/print-backends,%{_datadir}/print-backends}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -106,6 +107,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libcpdb-libs-common.so.1
 %attr(755,root,root) %{_libdir}/libcpdb-libs-frontend.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libcpdb-libs-frontend.so.1
+%dir %{_libdir}/print-backends
+%dir %{_datadir}/print-backends
 
 %files devel
 %defattr(644,root,root,755)
