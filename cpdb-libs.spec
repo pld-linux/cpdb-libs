@@ -23,6 +23,8 @@ BuildRequires:	gettext-tools >= 0.21
 BuildRequires:	glib2-devel >= 2.0
 BuildRequires:	libtool >= 2:2
 BuildRequires:	pkgconfig
+Obsoletes:	cpdb-backend-file < 2.0-0.b6
+Obsoletes:	cpdb-backend-gcp < 2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -90,7 +92,7 @@ Statyczne biblioteki CPDB.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir}/print-backends,%{_datadir}/print-backends}
+install -d $RPM_BUILD_ROOT%{_libdir}/print-backends
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -114,7 +116,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libcpdb-frontend.so.*.*.*
 %ghost %{_libdir}/libcpdb-frontend.so.2
 %dir %{_libdir}/print-backends
-%dir %{_datadir}/print-backends
 
 %files devel
 %defattr(644,root,root,755)
