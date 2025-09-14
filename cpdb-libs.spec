@@ -5,18 +5,21 @@
 Summary:	Frontend/Backend Communication Libraries for the Common Print Dialog Backends
 Summary(pl.UTF-8):	Biblioteki komunikacji frontendu/backendu dla CPDB (wspólnych okien dialogowych drukowania)
 Name:		cpdb-libs
-Version:	1.2.0
-Release:	1
+Version:	2.0
+%define	subver	b7
+%define	rel	1
+Release:	0.%{subver}.%{rel}
 License:	MIT
 Group:		Libraries
 #Source0Download: https://github.com/OpenPrinting/cpdb-libs/releases
-Source0:	https://github.com/OpenPrinting/cpdb-libs/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	2df7396b3c6ce05a0c001324d82396de
+Source0:	https://github.com/OpenPrinting/cpdb-libs/archive/%{version}%{subver}/%{name}-%{version}%{subver}.tar.gz
+# Source0-md5:	bd8a6af99d2e38387e9da6719ca8eca3
 Patch0:		%{name}-link.patch
 URL:		https://github.com/OpenPrinting/cpdb-libs
 BuildRequires:	autoconf >= 2.69
 BuildRequires:	automake
 BuildRequires:	cups-devel
+BuildRequires:	gettext-tools >= 0.21
 BuildRequires:	glib2-devel >= 2.0
 BuildRequires:	libtool >= 2:2
 BuildRequires:	pkgconfig
@@ -69,12 +72,16 @@ Static CPDB libraries.
 Statyczne biblioteki CPDB.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{subver}
 %patch -P0 -p1
 
+# allow gettextize
+%{__sed} -i -e 's,po/Makefile\.in,,' configure.ac
+
 %build
+%{__gettextize}
 %{__libtoolize}
-%{__aclocal}
+%{__aclocal} -I m4
 %{__autoconf}
 %{__automake}
 %configure \
@@ -89,10 +96,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/print-backends,%{_datadir}/print-backends}
 	DESTDIR=$RPM_BUILD_ROOT
 
 # obsoleted by pkg-config
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libcpdb-*.la
-
-install -d $RPM_BUILD_ROOT%{_examplesdir}
-cp -pr demo $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libcpdb*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -103,28 +107,27 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc LICENSE.md README.md
-%attr(755,root,root) %{_libdir}/libcpdb-libs-common.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcpdb-libs-common.so.1
-%attr(755,root,root) %{_libdir}/libcpdb-libs-frontend.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcpdb-libs-frontend.so.1
+%attr(755,root,root) %{_bindir}/cpdb-pickle-print
+%attr(755,root,root) %{_bindir}/cpdb-text-frontend
+%attr(755,root,root) %{_libdir}/libcpdb.so.*.*.*
+%ghost %{_libdir}/libcpdb.so.2
+%attr(755,root,root) %{_libdir}/libcpdb-frontend.so.*.*.*
+%ghost %{_libdir}/libcpdb-frontend.so.2
 %dir %{_libdir}/print-backends
 %dir %{_datadir}/print-backends
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libcpdb-libs-common.so
-%attr(755,root,root) %{_libdir}/libcpdb-libs-frontend.so
-%{_includedir}/cpd-interface-headers
-%{_includedir}/cpdb-libs-backend.h
-%{_includedir}/cpdb-libs-frontend.h
-%{_pkgconfigdir}/cpdb-libs-backend.pc
-%{_pkgconfigdir}/cpdb-libs-common.pc
-%{_pkgconfigdir}/cpdb-libs-frontend.pc
-%{_examplesdir}/%{name}-%{version}
+%{_libdir}/libcpdb.so
+%{_libdir}/libcpdb-frontend.so
+%{_includedir}/cpdb
+%{_pkgconfigdir}/cpdb.pc
+%{_pkgconfigdir}/cpdb-backend.pc
+%{_pkgconfigdir}/cpdb-frontend.pc
 
 %if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libcpdb-libs-common.a
-%{_libdir}/libcpdb-libs-frontend.a
+%{_libdir}/libcpdb.a
+%{_libdir}/libcpdb-frontend.a
 %endif
