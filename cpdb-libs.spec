@@ -6,14 +6,14 @@ Summary:	Frontend/Backend Communication Libraries for the Common Print Dialog Ba
 Summary(pl.UTF-8):	Biblioteki komunikacji frontendu/backendu dla CPDB (wspólnych okien dialogowych drukowania)
 Name:		cpdb-libs
 Version:	2.0
-%define	subver	b7
+%define	subver	b8
 %define	rel	1
 Release:	0.%{subver}.%{rel}
 License:	MIT
 Group:		Libraries
 #Source0Download: https://github.com/OpenPrinting/cpdb-libs/releases
 Source0:	https://github.com/OpenPrinting/cpdb-libs/archive/%{version}%{subver}/%{name}-%{version}%{subver}.tar.gz
-# Source0-md5:	bd8a6af99d2e38387e9da6719ca8eca3
+# Source0-md5:	160cd609b921a47484f0bc7fc6942881
 Patch0:		%{name}-link.patch
 URL:		https://github.com/OpenPrinting/cpdb-libs
 BuildRequires:	autoconf >= 2.69
@@ -111,10 +111,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE.md README.md
 %attr(755,root,root) %{_bindir}/cpdb-pickle-print
 %attr(755,root,root) %{_bindir}/cpdb-text-frontend
-%attr(755,root,root) %{_libdir}/libcpdb.so.*.*.*
-%ghost %{_libdir}/libcpdb.so.2
-%attr(755,root,root) %{_libdir}/libcpdb-frontend.so.*.*.*
-%ghost %{_libdir}/libcpdb-frontend.so.2
+%{_libdir}/libcpdb.so.*.*.*
+%ghost %{_libdir}/libcpdb.so.3
+%{_libdir}/libcpdb-frontend.so.*.*.*
+%ghost %{_libdir}/libcpdb-frontend.so.3
 %dir %{_libdir}/print-backends
 
 %files devel
